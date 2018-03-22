@@ -1,3 +1,13 @@
+# Project specific
+pres-speech/
+marcoPoloBot/
+clinton-trump-corpus/
+Chatbot instructions.pdf
+
+# configuration
+config.py
+__pycache__/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
