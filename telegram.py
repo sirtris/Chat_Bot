@@ -50,7 +50,7 @@ def handle_updates(updates):
             if any(text.lower() in s for s in greetings):
                 send_message("Good day sir", chat)
             elif any(text.lower() in s for s in goodbye):
-                send_message("See u later", chat)
+                send_message("See you later", chat)
             else:
                 send_message("message", chat)
         except KeyError:
