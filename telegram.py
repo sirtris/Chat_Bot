@@ -47,9 +47,9 @@ def handle_updates(updates):
         try:
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
-            if any(text in s for s in greetings):
+            if any(text.lower() in s for s in greetings):
                 send_message("Good day sir", chat)
-            if any(text in s for s in goodbye):
+            elif any(text.lower() in s for s in goodbye):
                 send_message("See u later", chat)
             else:
                 send_message("message", chat)
@@ -78,7 +78,7 @@ def main():
         if len(updates["result"]) > 0:
             last_update_id = get_last_update_id(updates) + 1
             handle_updates(updates)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':
