@@ -7,6 +7,7 @@ import requests
 import time
 import urllib
 import config
+from syllable import generate_haiku
 #python3: urllib.parse.quote_plus
 # python2: urllib.pathname2url
 
@@ -47,7 +48,9 @@ def handle_updates(updates):
         try:
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
-            if any(text.lower() in s for s in greetings):
+            if len(text.split()) > 5:
+                send_message(generate_haiku(text), chat)
+            elif any(text.lower() in s for s in greetings):
                 send_message("Good day sir", chat)
             elif any(text.lower() in s for s in goodbye):
                 send_message("See you later", chat)

@@ -17,6 +17,7 @@ from gensim.models import KeyedVectors
 # load the Stanford GloVe model
 filename = 'glove.6B.50d.txt.word2vec'
 model = KeyedVectors.load_word2vec_format(filename, binary=False)
+print('Done loading model')
 #%%
 cmu_dict = cmudict.dict()
 pyphen_dict = pyphen.Pyphen(lang='en')
@@ -202,3 +203,10 @@ def generate_haiku(sentence):
         return format_haiku(words_to_sentence(words))
     else:
         return "This is too long or too short to be a Haiku"
+    
+    
+def main():
+    pass
+    
+if __name__ == '__main__':
+    main()
