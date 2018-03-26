@@ -3,6 +3,7 @@ pres-speech/
 marcoPoloBot/
 clinton-trump-corpus/
 Chatbot instructions.pdf
+glove.*
 
 # configuration
 config.py
