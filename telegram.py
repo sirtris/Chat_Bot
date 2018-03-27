@@ -65,7 +65,6 @@ def handle_updates(updates):
                 send_message(format_haiku("Sad to see you go, but all the nice meetings have to come to an end."), chat)
             elif text == "🤖🔫":
                 send_message(format_haiku("Be careful with that artillery what do you think you are doing?!"), chat)
-                sys.exit()
             else:
                 send_message(format_haiku("Your message was not something I could spot as a command or haiku"), chat)
                 send_message(format_haiku("Please do try to send 'info' to prompt a list of commands that I know"), chat)
