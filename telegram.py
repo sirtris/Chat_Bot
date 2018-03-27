@@ -8,6 +8,7 @@ import time
 import urllib
 import config
 from syllable import generate_haiku
+from syllable import clappify
 #python3: urllib.parse.quote_plus
 # python2: urllib.pathname2url
 
@@ -48,7 +49,9 @@ def handle_updates(updates):
         try:
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
-            if len(text.split()) > 5:
+            if text[0] == "👏":
+                send_message(clappify(text[1:]), chat)
+            elif len(text.split()) > 5:
                 send_message(generate_haiku(text), chat)
             elif any(text.lower() in s for s in greetings):
                 send_message(generate_haiku("Hello there friend, nice to see you again. How can I be of service?"), chat)

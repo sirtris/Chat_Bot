@@ -46,7 +46,7 @@ def nsyl(word):
         # list comprehensions make code more redable :^)
         return [len(list(y for y in x if y[-1].isdigit())) for x in cmu_dict[word]][0] # [0] takes the first one if the word can be pronounced in multiple ways
     except KeyError:
-        return len(pyphen_dict.inserted('Whitecaps').split('-'))
+        return len(pyphen_dict.inserted(word).split('-'))
 
 
 # counts number of syllables in sentence
@@ -279,6 +279,14 @@ def generate_haiku(sentence):
     else:
         return format_haiku("The text you wrote me seems excessively long for making a haiku")
 
+
+def clappify(sentence):
+    clapped = ""
+    for word in sentence.split(' '):
+        for syl in pyphen_dict.inserted(word).split('-'):
+            clapped += syl + "👏"
+        clapped += " "
+    return clapped[:-1]
 
 def main():
     pass
