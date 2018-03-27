@@ -146,6 +146,14 @@ def get_synonyms(word, w2v):
     else:
         for ss in wn.synsets(word):
             ret_syns += ss.lemma_names()
+    while '.' in ret_syns:
+        ret_syns.remove('.')
+    while ',' in ret_syns:
+        ret_syns.remove(',')
+    while '?' in ret_syns:
+        ret_syns.remove('?')
+    if len(ret_syns) > 10:
+        return ret_syns[:10]
     return ret_syns
 
 
