@@ -51,9 +51,9 @@ def handle_updates(updates):
             if len(text.split()) > 5:
                 send_message(generate_haiku(text), chat)
             elif any(text.lower() in s for s in greetings):
-                send_message("Good day sir", chat)
+                send_message(generate_haiku("Hello there friend, nice to see you again. How can I be of service?"), chat)
             elif any(text.lower() in s for s in goodbye):
-                send_message("See you later", chat)
+                send_message(generate_haiku("Sad to see you go, but ev'ry nice meeting has to come to an end."), chat)
             else:
                 send_message("message", chat)
         except KeyError:
