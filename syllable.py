@@ -11,8 +11,10 @@ To finish what you
 
 # import nltk
 # nltk.download('cmudict')
+# nltk.download('wordnet')
 
 from nltk.corpus import cmudict
+from nltk.corpus import wordnet as wn
 import pyphen
 import re, string
 from gensim.models import KeyedVectors
@@ -135,16 +137,28 @@ def cut_out(words, n):
             return short_words
 
 
+def get_synonyms(word, w2v):
+    ret_syns = []
+    if w2v:
+        synonyms = model.most_similar(word, topn=10)
+        for synonym in synonyms:
+            ret_syns.append(synonym[0])
+    else:
+        for ss in wn.synsets(word):
+            ret_syns += ss.lemma_names()
+    return ret_syns
+
+
 def make_length_n(words, n):
     m = syl_in_words(words)
     new_words = words[:]
+    w2v = False
     while m != n:
         for i, word in enumerate(words):
             word = word.lower()
             new_word = word
-            synonyms = model.most_similar(word, topn=10)
+            synonyms = get_synonyms(word, w2v)
             for synonym in synonyms:
-                synonym = synonym[0]
                 if n < m and nsyl(synonym) < nsyl(word):
                     new_word = synonym
                     break
@@ -155,7 +169,11 @@ def make_length_n(words, n):
             if new_word != word:
                 m += nsyl(new_word) - nsyl(word)
         if words == new_words:
-            return False
+            if w2v:
+                return False
+            else:
+                # fall back to word2vec
+                w2v = True
         words = new_words[:]
     return new_words
 
@@ -185,9 +203,9 @@ def cut_thirds(ws):
         if m < n/3:
             first_third.append(w)
         elif m > 2*(n/3):
-            second_third.append(w)
-        else:
             third_third.append(w)
+        else:
+            second_third.append(w)
     return first_third, second_third, third_third
 
 
@@ -199,7 +217,7 @@ def modify_words(words, b, m, e):
         ews = make_length_n(cut_off(words, 12), 5)
         bws = cut_out(words, 12)
     elif e and m:
-        bws = make_length_n(reversed(cut_off(reversed(words), 12), 5))
+        bws = make_length_n((cut_off(reversed(words), 12))[::-1], 5)
         ews = (cut_out(reversed(words), 12))[::-1]
     elif b and e:
         mws = make_length_n(cut_off(reversed(cut_off(reversed(words), 5)), 5), 7)
@@ -223,7 +241,7 @@ def modify_words(words, b, m, e):
         mws = make_length_n(mws, 7)
         ews = make_length_n(ews, 5)
     if bws is False or mws is False or ews is False:
-        return ["can't", "find", "synonyms"]
+        return ["Alas, it seems I can't make a haiku out of what you have written."]
     return bws + mws + ews
 
 
@@ -248,8 +266,10 @@ def generate_haiku(sentence):
         # else: middle_okay = False
         words = modify_words(words, beginning_okay, middle_okay, end_okay)
         return format_haiku(words_to_sentence(words))
+    elif syl_in_sentence(sentence) < 13:
+        return format_haiku("The text you wrote me seems excessively short for making a haiku")
     else:
-        return "This is too long or too short to be a Haiku"
+        return format_haiku("The text you wrote me seems excessively long for making a haiku")
 
 
 def main():
