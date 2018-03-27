@@ -138,6 +138,8 @@ def cut_out(words, n):
 
 
 def get_synonyms(word, w2v):
+    if word == "a":
+        return []
     ret_syns = []
     if w2v:
         synonyms = model.most_similar(word, topn=10)
@@ -146,12 +148,11 @@ def get_synonyms(word, w2v):
     else:
         for ss in wn.synsets(word):
             ret_syns += ss.lemma_names()
-    while '.' in ret_syns:
-        ret_syns.remove('.')
-    while ',' in ret_syns:
-        ret_syns.remove(',')
-    while '?' in ret_syns:
-        ret_syns.remove('?')
+    tmp = ret_syns[:]
+    ret_syns = []
+    for e in tmp:
+        if '_' not in e and '.' not in e and '?' not in e:
+            ret_syns.append(e)
     if len(ret_syns) > 10:
         return ret_syns[:10]
     return ret_syns
@@ -242,7 +243,7 @@ def modify_words(words, b, m, e):
         mws = mws[::-1]
         bws = make_length_n(bws, 5)
         mws = make_length_n(mws, 7)
-        ews = (cut_out(reversed(words), 12))[::-1]
+        ews = (cut_out(reversed(words), 5))[::-1]
     else:
         bws, mws, ews = cut_thirds(words)
         bws = make_length_n(bws, 5)
