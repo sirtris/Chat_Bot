@@ -5,9 +5,10 @@
 import json
 import requests
 import time
+import sys
 import urllib
 import config
-from syllable import generate_haiku
+from syllable import generate_haiku, format_haiku
 from syllable import clappify
 #python3: urllib.parse.quote_plus
 # python2: urllib.pathname2url
@@ -43,22 +44,31 @@ def get_last_update_id(updates):
 
 
 def handle_updates(updates):
-    greetings = ['hi', 'hello', 'good day', 'sup' 'whats up', 'good moring', 'greetings']
-    goodbye = ['bye', 'bye bye', 'goodbye', 'see you', 'see you later', 'c u']
+    greetings = ['hi bot', 'hello bot', 'good day bot', 'sup bot', 'whats up', 'hey', 'good moring bot', 'greetings bot']
+    goodbye = ['bye bot', 'bye bye bot', 'goodbye bot', 'see you bot', 'see you later bot', 'c u bot', 'adieu bot']
+    instructions = ['info', 'instructions', 'help', 'information', 'what', 'commands']
     for update in updates["result"]:
         try:
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
             if text[0] == "👏":
                 send_message(clappify(text[1:]), chat)
+            elif any(text.lower() in s for s in instructions):
+                send_message(format_haiku("Write something like hi, info or adieu to get scripted responses."), chat)
+                send_message(format_haiku("Put a clap(👏) at the start of your message and I will clap it for you"), chat)
+                send_message(format_haiku("Lastly, give me text and I will try to format it as a haiku."), chat)
             elif len(text.split()) > 5:
                 send_message(generate_haiku(text), chat)
             elif any(text.lower() in s for s in greetings):
-                send_message(generate_haiku("Hello there friend, nice to see you again. How can I be of service?"), chat)
+                send_message(format_haiku("Hello there friend, nice to see you again. How can I be of service?"), chat)
             elif any(text.lower() in s for s in goodbye):
-                send_message(generate_haiku("Sad to see you go, but ev'ry nice meeting has to come to an end."), chat)
+                send_message(format_haiku("Sad to see you go, but all the nice meetings have to come to an end."), chat)
+            elif text == "🤖🔫":
+                send_message(format_haiku("Be careful with that artillery what do you think you are doing?!"), chat)
+                sys.exit()
             else:
-                send_message("message", chat)
+                send_message(format_haiku("Your message was not something I could spot as a command or haiku"), chat)
+                send_message(format_haiku("Please do try to send 'info' to prompt a list of commands that I know"), chat)
         except KeyError:
             pass
 
