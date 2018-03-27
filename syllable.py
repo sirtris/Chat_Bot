@@ -280,13 +280,54 @@ def generate_haiku(sentence):
         return format_haiku("The text you wrote me seems excessively long for making a haiku")
 
 
+def nvowels(word):
+    ys = 0
+    for i, l in enumerate(word):
+        if l == 'y':
+            front = False
+            if i != 0:
+                if word[i-1] not in "aeiou":
+                    front = True
+            if front and i < len(word):
+                if word[i-1] not in "aeiou":
+                    ys += 1
+    return ys + sum(map(word.lower().count, "aeiou"))
+
+
 def clappify(sentence):
     clapped = ""
     for word in sentence.split(' '):
-        for syl in pyphen_dict.inserted(word).split('-'):
-            clapped += syl + "👏"
+        if nsyl(word) == nvowels(word):
+            # every vowel-letter is a vowel-sound
+            # we can clap that
+            clapped_word = ""
+            claps = 0
+            for i, l in enumerate(word):
+                clapped_word += l
+                if l in "aeiou":
+                    if i < len(word):
+                        if claps < nvowels(word)-1:
+                            clapped_word += "👏"
+                            claps += 1
+                elif l == 'y':
+                    # check whether y is a vowel
+                    front = False
+                    if i != 0:
+                        if word[i-1] not in "aeiou":
+                            front = True
+                    if front and i < len(word):
+                        if word[i-1] not in "aeiou":
+                            # y is a vowel
+                            if claps < nvowels(word)-1:
+                                clapped_word += "👏"
+                                claps += 1
+            clapped += clapped_word + "👏"
+        else:
+            for syl in pyphen_dict.inserted(word).split('-'):
+                clapped += syl + "👏"
         clapped += " "
     return clapped[:-1]
+
 
 def main():
     pass
