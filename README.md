@@ -10,7 +10,7 @@ A haiku is a form of Japanese poetry. It is a very short poem that consist of 17
 
 The bot can recognize a variety of greetings and goodbyes, to which it will answer with a pre-programmed response. If the bot does not recognize the input, it will inform you that it was not able to understand the input and that with writing `info` to the bot will prompt it to tell you what it can do. \
 
-![](./img/greeting.png | width=250)
+<img src="./img/greeting.png" alt="text" width="250">
 
 The main functionalities of the bot are helping to write haikus and helping you finding the syllables in a word.  
 
