@@ -18,6 +18,12 @@ To make the bot help you writing a haiku you can just send it a text that has ap
 [add image] <- kinky haiku
 #### How it works
 To check whether the text has the appropriate amount of syllables we must find a way to count syllables in word. For this task we use pythons `NLTK cmudict`. Because it is based on a dictionary it does not contain all words. We use `pyphen` as a fall-back for these cases. Unfortunately this does not work as well as the `NLTK` method.  
+To create the haiku we check if parts of the haiku (like beginning or ending) are
+already in the right format. We then change the part that is not matching (and sometimes the part that comes after it).
+This is done by replacing words with synonyms of the word, until the desired number of syllables is reached.
+Finding the synonyms is done with the `nltk wordnet` database. We first used gloVe to find
+similar words but laer found that `wordnet` works better. If a word is not in the database
+we fall back to the original method of using gloVe. 
 
 ### Finding syllables
 One way to find the syllables in a word is to clap along when saying it. Each clap corresponds to one syllable. Sometimes people still find this difficult to do. This is where our bot comes to help. Just send it the clapping hands emoji followed by the word or text you want to know the syllables of. It will then send you back a message, where the clapping hands emoji is inserted at the points where you would have to clap.
@@ -25,6 +31,7 @@ One way to find the syllables in a word is to clap along when saying it. Each cl
 #### How it works
 To achieve this task we use the hyphenator that come with `pyphen` together with our own set of rules. Even if the hyphenator in `pyphen` would work perfectly it would not quiet get the task right. In English hyphenating a word is not exactly the same as dividing it up into syllables. The word `learning` for example would be divided into syllables like this `lear-ning`. One must however not hyphenate it like this at the end of a line because a reader could not know how to pronounce the `lear` part. \
 If the word has a many syllables a vowels we use our own method to insert the claps otherwise we use `pyphen`
+Our method checks if the number of vowel letters is the same as vowel sounds (also for cases where y is a vowel sound) and then puts the clap emoji after that sound.
 
 
 # Configurations
