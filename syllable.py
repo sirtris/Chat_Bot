@@ -138,7 +138,7 @@ def cut_out(words, n):
 
 
 def get_synonyms(word, w2v):
-    if word == "a":
+    if word in ["a", "i", "be"]:
         return []
     ret_syns = []
     if w2v:
